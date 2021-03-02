@@ -4,15 +4,17 @@ library(RCurl)
 library(jsonlite)
 library(leaflet)
 
-source('parameters_tregor.R')
 source('util.R')
 source('google_id.R')
+source('parameters_saint_didier.R')
+
+directory <- './data/'
+infile  <- paste(directory, 'valeursfoncieres_', year, '.csv', sep='')
+outfile <- paste(directory, 'valeursfoncieres_', commune, '_', year, '.csv', sep='')
 
 # Preprocessing ####
-file <- paste('valeursfoncieres_', year, '.csv', sep='')
-print(file)
-#file <- paste('valeursfoncieres_test.csv')
-df.raw <- read.csv(file)
+print(infile)
+df.raw <- read.csv(infile)
 df.filter <- filter_data(df.raw, zipcodes, max_vf, local)
 df.filter <- feature_engineering(df.filter, max_ppm, surface_bins)
 glimpse(df.filter)
@@ -23,8 +25,6 @@ df.filter <- df.filter %>%
   mutate(addr = paste(No.voie, Type.de.voie, Voie, Code.postal, Commune, 'France'))
 colnames(df.filter)
 head(df.filter)
-
-#df.filter %>% filter(Code.postal == '93450') %>% select(Commune)
 
 # run the geocode function from ggmap package
 address_ggmap <- geocode(location = df.filter$addr, output = "more", source = "google")
@@ -40,6 +40,6 @@ summary(df.geoc)
 colnames(df.geoc)
 
 #Save to csv file
-file <- paste('valeursfoncieres_', commune, '_', year, '.csv', sep='')
-write.csv(df.geoc, file, row.names = FALSE)
-file
+#file <- paste('valeursfoncieres_', commune, '_', year, '.csv', sep='')
+write.csv(df.geoc, outfile, row.names = FALSE)
+outfile

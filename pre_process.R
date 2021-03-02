@@ -5,12 +5,11 @@
 library(dplyr)
 library(data.table)
 
-directory <= './data/'
 prefix <- 'valeursfoncieres'
-year <- 2019
+year <- 2020
 
-infile  <- paste(directory, prefix, '-', year, '.txt', sep='')
-outfile <- paste(directory, prefix, '_', year, '.csv', sep='')
+infile  <- paste(data_dir, prefix, '-', year, '.txt', sep='')
+outfile <- paste(data_dir, prefix, '_', year, '.csv', sep='')
 
 df.raw <- fread(infile,
                      header      = TRUE,
@@ -55,12 +54,6 @@ df.filter <-
   df.filter %>%
   filter(Nature.mutation == 'Vente') %>%
   select(-Nature.mutation) # No need to keep column
-
-# Extract maison only -- this is now in the parameters file
-# df.filter <-
-#   df.filter %>%
-#   filter(grepl('Maison', Type.local)) %>%
-#   select(-Type.local) # No need to keep column
 
 df.filter$Valeur.fonciere <- as.numeric(as.character(df.filter$Valeur.fonciere))
 df.filter$No.voie <- as.factor(df.filter$No.voie)
