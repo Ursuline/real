@@ -15,14 +15,28 @@ theme_update(plot.title         = element_text(hjust = 0.5,
 
 output_plot <- function(filename){
   filename <- paste(plot_dir, filename, sep='')
-  ggsave(filename, width = 30, height = 20, dpi=360, units = "cm")
+  ggsave(filename, width = 30, height = 20, dpi=600, units = "cm")
   dev.off()
 }
 
-to_png <- function(filename, width, height, res){
+to_png_old <- function(filename, width, height, res){
+  file <- paste(plot_dir, filename,'.png', sep='')
+  print(file)
   dev.copy(png,
-           file = paste(plot_dir, filename,'.png', sep=''),
+           file = file,
            width = width, height = height, res=res, units = "cm")
+  dev.off()
+}
+
+to_png <- function(filename, g, width, height, res){
+  ggsave(paste(filename, '.png'),
+         path = plot_dir,
+         plot = last_plot(),
+         scale = 1,
+         width = width,
+         height = height,
+         units = 'cm',
+         dpi = res)
   dev.off()
 }
 
